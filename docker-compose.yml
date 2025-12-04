@@ -1,0 +1,16 @@
+services:
+  basedatos:
+    image: postgres:15-alpine
+    container_name: cine_db
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=cineuser
+      - POSTGRES_PASSWORD=cinepass
+      - POSTGRES_DB=cinedb
+      
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
