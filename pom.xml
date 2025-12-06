@@ -7,7 +7,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.2.0</version>
-		<relativePath/> 
+		<relativePath/>
 	</parent>
 	
 	<groupId>com.cine</groupId>
@@ -17,7 +17,7 @@
 	<description>Sistema de Cine</description>
 
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 		<start-class>com.gruposiete.backend.cine.api.CinemaApplication</start-class>
 	</properties>
 
@@ -45,6 +45,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.12.1</version>
+				<configuration>
+<release>17</release>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

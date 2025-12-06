@@ -17,7 +17,7 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         // .allowedOrigins: ¿Quién tiene permiso de entrar?
                         // Aquí pondremos la dirección de tu Astro (4321)
-                        .allowedOrigins("http://localhost:4321")
+                        .allowedOrigins("*")
                         // .allowedMethods: ¿Qué pueden hacer? (Leer, Guardar, Borrar, etc.)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
             }
