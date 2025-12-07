@@ -31,22 +31,22 @@ public class Pelicula {
     @Column(name = "actor_name")
     private List<String> cast;
     
-    // CAMBIO IMPORTANTE: Ahora es ManyToMany con la tabla Formato
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "pelicula_formato",
-        joinColumns = @JoinColumn(name = "pelicula_id"),
-        inverseJoinColumns = @JoinColumn(name = "formato_id")
-    )
-    private List<Formato> formats;
+    // CAMBIO CLAVE: Ahora es una lista de Strings simple, no objetos complejos.
+    // Esto arregla el error de guardado inmediatamente.
+    @ElementCollection
+    @CollectionTable(name = "movie_format", joinColumns = @JoinColumn(name = "movie_id"))
+    @Column(name = "format_name")
+    private List<String> formats; 
 
     private Integer anio;
-    private boolean isPreSale;
+    
+    // Mapeamos 'preSale' del JSON a 'isPreSale' de Java automáticamente
+    @Column(name = "is_pre_sale")
+    private boolean preSale; 
 
     public Pelicula() {}
 
-    // Constructor actualizado (recibe List<Formato>)
-    public Pelicula(String title, String synopsis, String director, String duration, String rating, String poster, String backdrop, List<String> genre, List<String> cast, List<Formato> formats, Integer anio, boolean isPreSale) {
+    public Pelicula(String title, String synopsis, String director, String duration, String rating, String poster, String backdrop, List<String> genre, List<String> cast, List<String> formats, Integer anio, boolean preSale) {
         this.title = title;
         this.synopsis = synopsis;
         this.director = director;
@@ -58,7 +58,7 @@ public class Pelicula {
         this.cast = cast;
         this.formats = formats;
         this.anio = anio;
-        this.isPreSale = isPreSale;
+        this.preSale = preSale;
     }
 
     // Getters y Setters
@@ -82,13 +82,12 @@ public class Pelicula {
     public void setGenre(List<String> genre) { this.genre = genre; }
     public List<String> getCast() { return cast; }
     public void setCast(List<String> cast) { this.cast = cast; }
-    
-    // Getter/Setter actualizado
-    public List<Formato> getFormats() { return formats; }
-    public void setFormats(List<Formato> formats) { this.formats = formats; }
-    
+    public List<String> getFormats() { return formats; }
+    public void setFormats(List<String> formats) { this.formats = formats; }
     public Integer getAnio() { return anio; }
     public void setAnio(Integer anio) { this.anio = anio; }
-    public boolean isPreSale() { return isPreSale; }
-    public void setPreSale(boolean preSale) { isPreSale = preSale; }
+    
+    // Getter/Setter especial para JSON 'preSale'
+    public boolean isPreSale() { return preSale; }
+    public void setPreSale(boolean preSale) { this.preSale = preSale; }
 }

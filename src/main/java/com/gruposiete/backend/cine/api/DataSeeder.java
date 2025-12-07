@@ -52,6 +52,16 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         
         // 0. CATÁLOGOS (Géneros y Formatos)
+        if (formatoRepository.count() == 0) {
+            formatoRepository.saveAll(Arrays.asList(
+                new Formato("2D"),
+                new Formato("3D"),
+                new Formato("IMAX"),
+                new Formato("4D"),
+                new Formato("ATMOS")
+            ));
+        }
+
         if (generoRepository.count() == 0) {
             generoRepository.saveAll(Arrays.asList(
                 new Genero("Acción"), new Genero("Aventura"), new Genero("Ciencia Ficción"),
@@ -61,31 +71,11 @@ public class DataSeeder implements CommandLineRunner {
             ));
         }
 
-        // Formatos
-        Formato f2d = null, f3d = null, fImax = null, f4d = null, fAtmos = null;
-        
-        if (formatoRepository.count() == 0) {
-            f2d = formatoRepository.save(new Formato("2D"));
-            f3d = formatoRepository.save(new Formato("3D"));
-            fImax = formatoRepository.save(new Formato("IMAX"));
-            f4d = formatoRepository.save(new Formato("4D"));
-            fAtmos = formatoRepository.save(new Formato("ATMOS"));
-        } else {
-            List<Formato> all = formatoRepository.findAll();
-            for(Formato f : all) {
-                if(f.getName().equals("2D")) f2d = f;
-                if(f.getName().equals("3D")) f3d = f;
-                if(f.getName().equals("IMAX")) fImax = f;
-                if(f.getName().equals("4D")) f4d = f;
-                if(f.getName().equals("ATMOS")) fAtmos = f;
-            }
-        }
-
         // 1. USUARIOS
         if (usuarioRepository.count() == 0) {
             usuarioRepository.saveAll(Arrays.asList(
-                new Usuario("Super Admin", "admin@cineplus.com", "admin123", "ADMIN"),
-                new Usuario("Juan Perez", "juan@gmail.com", "123456", "USER")
+                new Usuario("Super Admin", "admin@cineplus.com", "admin123", "ADMIN", "+593 99 999 9999"),
+                new Usuario("Juan Perez", "juan@gmail.com", "123456", "USER", "+593 99 123 4567")
             ));
         }
 
@@ -114,18 +104,53 @@ public class DataSeeder implements CommandLineRunner {
         if (peliculaRepository.count() == 0) {
             System.out.println("🌱 Cargando Películas...");
             List<Pelicula> peliculas = Arrays.asList(
-                new Pelicula("Gladiador II", "Años después...", "Ridley Scott", "2h 28m", "+16", "/images/portadas/gladiador-min.webp", "/images/banner/gladiador-banner.webp", Arrays.asList("Acción", "Drama"), Arrays.asList("Paul Mescal"), Arrays.asList(f2d, fImax, f4d), 2024, false),
-                new Pelicula("Wicked", "La historia no contada...", "Jon M. Chu", "2h 40m", "TP", "/images/portadas/wicked-min.webp", "/images/banner/wicked-banner.webp", Arrays.asList("Musical"), Arrays.asList("Ariana Grande"), Arrays.asList(f2d, f3d, fAtmos), 2024, false),
-                new Pelicula("Moana 2", "Tras recibir una llamada...", "David G.", "1h 40m", "TP", "/images/portadas/moana-min.webp", "/images/banner/moana-banner.webp", Arrays.asList("Animación"), Arrays.asList("La Roca"), Arrays.asList(f2d, f3d), 2024, true),
-                new Pelicula("Sonic 3", "Sinopsis...", "Jeff Fowler", "1h 49m", "TP", "/images/portadas/sonic-min.webp", "/images/banner/sonic-banner.webp", Arrays.asList("Acción"), Arrays.asList("Jim Carrey"), Arrays.asList(f2d), 2024, true),
-                new Pelicula("Mufasa", "Sinopsis...", "Barry Jenkins", "1h 58m", "TP", "/images/portadas/rey_leon-min.webp", "/images/banner/rey_leon-banner.webp", Arrays.asList("Aventura"), Arrays.asList("Aaron Pierre"), Arrays.asList(f2d, f3d, fImax), 2024, true)
+                new Pelicula(
+                    "Gladiador II", "Años después...", "Ridley Scott", "2h 28m", "+16", 
+                    "/images/portadas/gladiador-min.webp", "/images/banner/gladiador-banner.webp", 
+                    Arrays.asList("Acción", "Aventura", "Drama"), 
+                    Arrays.asList("Paul Mescal", "Pedro Pascal"), 
+                    Arrays.asList("2D", "IMAX", "4D"), 
+                    2024, false
+                ),
+                new Pelicula(
+                    "Wicked", "La historia no contada...", "Jon M. Chu", "2h 40m", "TP", 
+                    "/images/portadas/wicked-min.webp", "/images/banner/wicked-banner.webp", 
+                    Arrays.asList("Fantasía", "Musical"), 
+                    Arrays.asList("Ariana Grande"), 
+                    Arrays.asList("2D", "3D", "ATMOS"), 
+                    2024, false
+                ),
+                new Pelicula(
+                    "Moana 2", "Tras recibir una llamada...", "David G.", "1h 40m", "TP", 
+                    "/images/portadas/moana-min.webp", "/images/banner/moana-banner.webp", 
+                    Arrays.asList("Animación", "Aventura"), 
+                    Arrays.asList("La Roca"), 
+                    Arrays.asList("2D", "3D"), 
+                    2024, true
+                ),
+                new Pelicula(
+                    "Sonic 3: La Película", "Sonic, Knuckles y Tails...", "Jeff Fowler", "1h 49m", "TP", 
+                    "/images/portadas/sonic-min.webp", "/images/banner/sonic-banner.webp", 
+                    Arrays.asList("Acción", "Aventura"), 
+                    Arrays.asList("Jim Carrey"), 
+                    Arrays.asList("2D"), 
+                    2024, true
+                ),
+                new Pelicula(
+                    "Mufasa: El Rey León", "Rafiki cuenta...", "Barry Jenkins", "1h 58m", "TP", 
+                    "/images/portadas/rey_leon-min.webp", "/images/banner/rey_leon-banner.webp", 
+                    Arrays.asList("Aventura"), 
+                    Arrays.asList("Aaron Pierre"), 
+                    Arrays.asList("2D", "IMAX"), 
+                    2024, true
+                )
             );
             peliculaRepository.saveAll(peliculas);
         }
 
-        // 5. SNACKS (FORZAMOS RECARGA)
+        // 5. SNACKS
         System.out.println("🔄 Refrescando Dulcería...");
-        snackRepository.deleteAll(); // <--- BORRA LO QUE HAYA ANTES
+        snackRepository.deleteAll(); 
         List<Snack> snacks = Arrays.asList(
             new Snack("Combo Clásico", "Popcorn grande + 2 bebidas", 12.50, "combos", "/images/snacks/combo-clasico.webp"),
             new Snack("Combo Familiar", "2 Popcorn grandes + 4 bebidas", 22.00, "combos", "/images/snacks/combo-familiar.webp"),
@@ -149,11 +174,10 @@ public class DataSeeder implements CommandLineRunner {
             new Snack("Chocolate", "Con leche", 3.50, "dulces", "/images/snacks/barra-chocolate.webp")
         );
         snackRepository.saveAll(snacks);
-        
 
-        // 6. BENEFICIOS (FORZAMOS RECARGA)
+        // 6. BENEFICIOS
         System.out.println("🔄 Refrescando Beneficios...");
-        beneficioRepository.deleteAll(); // <--- BORRA LO QUE HAYA ANTES
+        beneficioRepository.deleteAll();
         beneficioRepository.saveAll(Arrays.asList(
             new Beneficio("CineFan Club", "Acumula puntos...", "star", "yellow"),
             new Beneficio("2x1 en Entradas", "Martes...", "ticket", "green"),
@@ -161,9 +185,9 @@ public class DataSeeder implements CommandLineRunner {
             new Beneficio("Descuento Familiar", "Grupos...", "users", "blue")
         ));
 
-        // 7. PROMOCIONES (FORZAMOS RECARGA)
+        // 7. PROMOCIONES
         System.out.println("🔄 Refrescando Promociones...");
-        promocionRepository.deleteAll(); // <--- BORRA LO QUE HAYA ANTES
+        promocionRepository.deleteAll();
         promocionRepository.saveAll(Arrays.asList(
             new Promocion("Martes de Cine", "$5.00", "50% OFF", "Martes", "🎬"),
             new Promocion("Combo Estudiante", "Carnet", "30% OFF", "Todo el año", "📚"),
@@ -171,9 +195,8 @@ public class DataSeeder implements CommandLineRunner {
             new Promocion("Pack Navideño", "4 entradas", "ESPECIAL", "Dic", "🎄")
         ));
 
-        // 8. SALAS Y FUNCIONES (BLINDADO)
+        // 8. SALAS Y FUNCIONES
         if (salaRepository.count() == 0) {
-            // Buscamos el cine por nombre para no fallar con índices
             List<Cinema> cines = cinemaRepository.findAll();
             Cinema scala = cines.stream().filter(c -> c.getName().contains("Scala")).findFirst().orElse(null);
             
