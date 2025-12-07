@@ -2,6 +2,7 @@ package com.gruposiete.backend.cine.api;
 
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Sala {
@@ -13,10 +14,9 @@ public class Sala {
     private String type; // "Normal", "VIP", "IMAX"
     private int capacity; 
 
-    // Relación: Una sala pertenece a un Cine
     @ManyToOne
     @JoinColumn(name = "cinema_id")
-    @JsonIgnore // Evita bucles infinitos al pedir datos
+    @JsonIgnore // Evita que se traiga todo el objeto Cine y cause bucles
     private Cinema cinema;
 
     public Sala() {}
@@ -37,6 +37,14 @@ public class Sala {
     public void setType(String type) { this.type = type; }
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
+    
     public Cinema getCinema() { return cinema; }
     public void setCinema(Cinema cinema) { this.cinema = cinema; }
+
+    // --- SOLUCIÓN MÁGICA ---
+    // Este método crea un campo "cinemaId" en el JSON automáticamente
+    @JsonProperty("cinemaId")
+    public Long getCinemaId() {
+        return (cinema != null) ? cinema.getId() : null;
+    }
 }
